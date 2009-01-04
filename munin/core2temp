@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+require 'msr'
+
+cpus = MSR.to_a
+
+case ARGV.shift
+when 'config'
+  puts <<EOT
+graph_title CPU Core temperatures
+graph_args --base 1000 -l 0
+graph_vtitle Celsius
+graph_category sensors
+EOT
+  for c in cpus
+    puts "cpu#{c.number}.label Core #{c.number}"
+  end
+else
+  for c in cpus
+    puts "cpu#{c.number}.value #{c.temperature}"
+  end
+end
