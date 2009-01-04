@@ -1,5 +1,10 @@
 module MSR
   class CPU
+    class << self
+      attr_accessor :temperature_junction
+    end
+    self.temperature_junction = 95
+
     # Returns a CPU instance for CPU +number+. If this CPU doesn't exist, a XXX
     # exception is thrown.
     def initialize(number)
@@ -17,7 +22,7 @@ module MSR
     end
 
     def temperature
-      95 - (self[0x19c] >> 16) & 0x7f # TODO make T_j configurable
+      self.class.temperature_junction - (self[0x19c] >> 16) & 0x7f
     end
   end
 
