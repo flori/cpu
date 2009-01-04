@@ -6,6 +6,4 @@ if temperature_junction = ARGV.shift
   MSR::CPU.temperature_junction = temperature_junction.to_i
 end
 
-MSR.each do |cpu|
-  puts "#{cpu.number}\t#{cpu.temperature}"
-end
+puts MSR.map { |c| c.temperature } * "\t"
