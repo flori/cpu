@@ -2,8 +2,6 @@
 
 require 'msr'
 
-cpus = MSR.to_a
-
 case ARGV.shift
 when 'config'
   puts <<EOT
@@ -12,11 +10,11 @@ graph_args --base 1000 -l 0
 graph_vtitle Celsius
 graph_category sensors
 EOT
-  for c in cpus
-    puts "cpu#{c.number}.label Core #{c.number}"
+  for c in MSR
+    puts "cpu#{c.cpuid}.label Core #{c.cpuid}"
   end
 else
-  for c in cpus
-    puts "cpu#{c.number}.value #{c.temperature}"
+  for c in MSR
+    puts "cpu#{c.cpuid}.value #{c.temperature}"
   end
 end

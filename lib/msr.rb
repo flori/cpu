@@ -1,19 +1,22 @@
 module MSR
   class CPU
     class << self
-      attr_accessor :temperature_junction
-    end
-    self.temperature_junction = 95
+      attr_accessor :t_j_max
 
-    # Returns a CPU instance for CPU +number+. If this CPU doesn't exist, a XXX
+      attr_accessor :modprobe_path
+    end
+    self.t_j_max = 95
+    self.modprobe_path = '/sbin/modprobe'
+
+    # Returns a CPU instance for CPU +cpuid+. If this CPU doesn't exist, a XXX
     # exception is thrown.
-    def initialize(number)
-      @number = number
+    def initialize(cpuid)
+      @cpuid = cpuid
       MSR.loaded? or MSR.load
-      @file = IO.new IO.sysopen('/dev/cpu/%d/msr' % @number, 'rb')
+      @file = IO.new IO.sysopen('/dev/cpu/%d/msr' % @cpuid, 'rb')
     end
 
-    attr_reader :number
+    attr_reader :cpuid
 
     def [](byte)
       @file.sysseek(byte)
@@ -22,35 +25,38 @@ module MSR
     end
 
     def temperature
-      self.class.temperature_junction - (self[0x19c] >> 16) & 0x7f
+      self.class.t_j_max - (self[0x19c] >> 16) & 0x7f
     end
   end
 
   class << self
-    def to_a
+    def cpus
       MSR.loaded? or MSR.load
-      cpus = Dir.open('/dev/cpu').inject([]) do |c, number|
-        number =~ /\A\d+\Z/ or next c
-        c << number.to_i
+      cpus = Dir.open('/dev/cpu').inject([]) do |c, cpuid|
+        cpuid =~ /\A\d+\Z/ or next c
+        c << cpuid.to_i
       end
       cpus.sort!
       cpus.map! { |c| CPU.new(c) }
     end
 
-    def each(&block)
+    alias to_a cpus
+
+    def each_cpu(&block)
       to_a.each(&block)
     end
+
+    alias each each_cpu
+
     include Enumerable
-  end
 
-  module_function
+    def loaded?
+      File.open('/proc/modules') { |f| f.any? { |line| line =~ /^msr\s/ } }
+    end
 
-  def loaded?
-    File.open('/proc/modules') { |f| f.any? { |line| line =~ /^msr\s/ } }
-  end
-
-  def load
-    system '/sbin/modprobe msr'
-    sleep 1
+    def load
+      system "#{self.class.modprobe_path} msr"
+      sleep 1
+    end
   end
 end
