@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'msr'
+MSR.each do |cpu|
+  puts "#{cpu.number}\t#{cpu.temperature}"
+end
