@@ -1,3 +1,5 @@
+# This module provides (read) access to the Model Specific Registers of Intel
+# CPUs on Linux.
 module MSR
   class CPU
     class << self
