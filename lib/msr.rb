@@ -23,6 +23,7 @@ module MSR
 
   class << self
     def to_a
+      MSR.loaded? or MSR.load
       cpus = Dir.open('/dev/cpu').inject([]) do |c, number|
         number =~ /\A\d+\Z/ or next c
         c << number.to_i
