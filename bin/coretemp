@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'msr'
+
+if t_j_max = ARGV.shift
+  MSR::CPU.t_j_max = t_j_max.to_i
+end
+
+puts MSR.map { |c| c.temperature } * "\t"

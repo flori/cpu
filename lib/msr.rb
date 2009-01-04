@@ -45,7 +45,7 @@ module MSR
     alias to_a cpus
 
     def each_cpu(&block)
-      to_a.each(&block)
+      cpus.each(&block)
     end
 
     alias each each_cpu
