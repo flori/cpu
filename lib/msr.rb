@@ -1,7 +1,7 @@
 module MSR
   class CPU
-    # Returns a CPU instance for CPU +number+. If this CPU doesn't exist,
-    # a XXX exception is thrown.
+    # Returns a CPU instance for CPU +number+. If this CPU doesn't exist, a XXX
+    # exception is thrown.
     def initialize(number)
       @number = number
       MSR.loaded? or MSR.load
@@ -17,7 +17,7 @@ module MSR
     end
 
     def temperature
-      95 - (self[0x19c] >> 16) & 0x7f
+      95 - (self[0x19c] >> 16) & 0x7f # TODO make T_j configurable
     end
   end
 
