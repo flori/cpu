@@ -26,8 +26,12 @@ module MSR
       data
     end
 
+    def t_j_max_distance
+      (self[0x19c] >> 16) & 0x7f
+    end
+
     def temperature
-      self.class.t_j_max - (self[0x19c] >> 16) & 0x7f
+      self.class.t_j_max - t_j_max_distance
     end
   end
 
