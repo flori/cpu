@@ -15,14 +15,14 @@ module MSR
     def initialize(cpuid)
       @cpuid = cpuid
       MSR.loaded? or MSR.load
-      @file = IO.new IO.sysopen('/dev/cpu/%d/msr' % @cpuid, 'rb')
+      @io = IO.new IO.sysopen('/dev/cpu/%d/msr' % @cpuid, 'rb')
     end
 
     attr_reader :cpuid
 
     def [](byte)
-      @file.sysseek(byte)
-      data, = @file.sysread(8).unpack('q')
+      @io.sysseek(byte)
+      data, = @io.sysread(8).unpack('q')
       data
     end
 
