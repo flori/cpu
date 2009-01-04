@@ -2,6 +2,10 @@
 
 require 'msr'
 
+if t_j_max = ENV['t_j_max']
+  MSR::CPU.t_j_max = t_j_max.to_i
+end
+
 case ARGV.shift
 when 'config'
   puts <<EOT
