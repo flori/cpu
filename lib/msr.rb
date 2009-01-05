@@ -1,14 +1,17 @@
 # This module provides (read) access to the Model Specific Registers of Intel
 # CPUs on Linux.
 module MSR
+
+  class << self
+    attr_accessor :modprobe_path
+  end
+  self.modprobe_path = '/sbin/modprobe'
+
   class CPU
     class << self
       attr_accessor :t_j_max
-
-      attr_accessor :modprobe_path
     end
     self.t_j_max = 95
-    self.modprobe_path = '/sbin/modprobe'
 
     # Returns a CPU instance for CPU +cpuid+. If this CPU doesn't exist, a XXX
     # exception is thrown.
@@ -61,7 +64,7 @@ module MSR
     end
 
     def load
-      system "#{self.class.modprobe_path} msr"
+      system "#{self.modprobe_path} msr"
       sleep 1
     end
   end
