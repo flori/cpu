@@ -17,7 +17,7 @@ module MSR
     # exception is thrown.
     def initialize(cpuid)
       @cpuid = cpuid
-      MSR.loaded? or MSR.load
+      MSR.available? or MSR.load_module
       @io = IO.new IO.sysopen('/dev/cpu/%d/msr' % @cpuid, 'rb')
     end
 
@@ -40,7 +40,7 @@ module MSR
 
   class << self
     def cpus
-      MSR.loaded? or MSR.load
+      MSR.available? or MSR.load_module
       cpus = Dir.open('/dev/cpu').inject([]) do |c, cpuid|
         cpuid =~ /\A\d+\Z/ or next c
         c << cpuid.to_i
@@ -59,11 +59,11 @@ module MSR
 
     include Enumerable
 
-    def loaded?
-      File.open('/proc/modules') { |f| f.any? { |line| line =~ /^msr\s/ } }
+    def available?
+      File.exist?('/dev/cpu/0/msr')
     end
 
-    def load
+    def load_module
       system "#{self.modprobe_path} msr"
       sleep 1
     end
