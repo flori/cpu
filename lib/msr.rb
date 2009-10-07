@@ -33,6 +33,10 @@ module MSR
       (self[0x19c] >> 16) & 0x7f
     end
 
+    def t_j_max
+      (self[0x1a2] >> 16) & 0x7f
+    end
+
     def temperature
       self.class.t_j_max - t_j_max_distance
     end
