@@ -25,8 +25,9 @@ module MSR
 
     # Returns a CPU instance for CPU +cpuid+. If this CPU doesn't exist an
     # InvalidCPUIdError exception is thrown.
-    def initialize(cpuid)
-      @cpuid = cpuid
+    def initialize(cpuid, coreid = nil)
+      @cpuid  = cpuid
+      @coreid = coreid
       MSR.available? or MSR.load_module
       begin
         @io = IO.new IO.sysopen('/dev/cpu/%d/msr' % @cpuid, 'rb')
@@ -38,6 +39,9 @@ module MSR
     # Returns the cpuid of this CPU, an integer in (0..(n - 1)) for a n-core
     # machine.
     attr_reader :cpuid
+
+    # Returns the coreid of this CPU.
+    attr_reader :coreid
 
     # Returns the byte at +offset+ as an integer number.
     def [](offset)
@@ -73,12 +77,18 @@ module MSR
     # Return an array of all CPU instances for this machine.
     def cpus
       MSR.available? or MSR.load_module
+      cpu_cores = {}
+      cpuinfos = File.read('/proc/cpuinfo').chomp.split(/^$/)
+      cpuinfos.map { |l| l[/processor\s*:\s*(\d+)/, 1].to_i rescue nil }.zip(
+        cpuinfos.map { |l| l[/core id\s*:\s*(\d+)/, 1].to_i rescue nil }).each do |cpuid, coreid|
+        cpu_cores[cpuid] = coreid
+      end
       cpus = Dir.open('/dev/cpu').inject([]) do |c, cpuid|
         cpuid =~ /\A\d+\Z/ or next c
         c << cpuid.to_i
       end
       cpus.sort!
-      cpus.map! { |c| CPU.new(c) }
+      cpus.map! { |c| CPU.new(c, cpu_cores[c]) }
     end
 
     alias to_a cpus

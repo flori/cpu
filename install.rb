@@ -8,6 +8,7 @@ include FileUtils::Verbose
 bin_dir = CONFIG['bindir']
 lib_dir = CONFIG['sitelibdir']
 
+system "gem install spruz"
 install 'lib/msr.rb', lib_dir
 mkdir_p bin_dir
 for file in Dir['bin/*']

@@ -1,9 +1,81 @@
 #!/usr/bin/env ruby
 
 require 'msr'
+require 'spruz/go'
+include Spruz::GO
+require 'bullshit'
 
-if t_j_max = ARGV.shift
-  MSR::CPU.t_j_max = t_j_max.to_i
+class ParseCommands
+  def self.parse(argv)
+    new(argv).parse
+  end
+
+  def initialize(argv)
+    @argv = argv
+  end
+
+  def set_t_j_max(temp)
+    t_j_max = temp and MSR::CPU.t_j_max = t_j_max.to_i
+  end
+
+  def create_history_path(filename)
+    filename ||= '~/.coretemp-history'
+    File.expand_path(filename)
+  end
+
+  def collect
+    opts = go 'tf', @argv
+    filename = create_history_path opts['f']
+    set_t_j_max opts['t']
+    temperatures = MSR.inject({}) do |h, c|
+      h.update c.coreid => c.temperature
+    end.sort_by { |ct| ct.first }.transpose.last
+    line = ([ Time.now.to_f ] + temperatures) * ' '
+    if filename
+      open(filename, 'a') do |o|
+        o.puts line
+      end
+    end
+  end
+
+  def clear
+    opts = go 'f', @argv
+    filename = create_history_path opts['f']
+    if filename and File.exist?(filename)
+      File.unlink(filename)
+    end
+  end
+
+  def stats
+    opts = go 'f', @argv
+    filename = create_history_path opts['f']
+    if filename and File.exist?(filename)
+      history = open(filename, 'r') { |o|
+        o.map do |line|
+          time, *temps = line.split(/\s+/)
+          [ Time.at(Float(time)) ] + temps.map { |t| Integer(t) }
+        end
+      }
+      measurements_last = history.last[1..-1]
+      times, *measurements = history.transpose
+      analyses = measurements.map { |m| Bullshit::Analysis.new(m) }
+      puts " min: %s" % (analyses.map { |a| a.min  } * ' ')
+      puts "last: %s" % (measurements_last * ' ')
+      puts " max: %s" % (analyses.map { |a| a.max  } * ' ')
+      puts "mean: %s" % (analyses.map { |a| a.mean.round } * ' ')
+    end
+  end
+
+  def parse
+    case command = @argv.shift
+    when 'collect', nil  then collect
+    when 'clear'         then clear
+    when 'stats'         then stats
+    when 'collect_stats' then collect; stats
+    end
+  end
 end
 
-puts MSR.map { |c| c.temperature } * "\t"
+if $0 == __FILE__
+  ParseCommands.parse(ARGV)
+end
