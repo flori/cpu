@@ -23,13 +23,22 @@ class ParseCommands
     File.expand_path(filename)
   end
 
+  def measure_temps(opts)
+    set_t_j_max opts['t']
+    MSR.inject({}) do |h, c|
+      h.update c.coreid => c.temperature
+    end.sort_by { |ct| ct.first }.transpose.last
+  end
+
+  def simple
+    opts = go 't', @argv
+    puts measure_temps(opts) * ' '
+  end
+
   def collect
     opts = go 'tf', @argv
     filename = create_history_path opts['f']
-    set_t_j_max opts['t']
-    temperatures = MSR.inject({}) do |h, c|
-      h.update c.coreid => c.temperature
-    end.sort_by { |ct| ct.first }.transpose.last
+    temperatures = measure_temps(opts)
     line = ([ Time.now.to_f ] + temperatures) * ' '
     if filename
       open(filename, 'a') do |o|
@@ -68,10 +77,11 @@ class ParseCommands
 
   def parse
     case command = @argv.shift
-    when 'collect', nil  then collect
+    when 'collect'       then collect
     when 'clear'         then clear
     when 'stats'         then stats
     when 'collect_stats' then collect; stats
+    else                      simple
     end
   end
 end
