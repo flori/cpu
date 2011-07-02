@@ -7,7 +7,7 @@ module CPU
     end
 
     # Loads the msr module and sleeps for a second afterwards.
-    def self.load_msr_module
+    def self.load_module
       system "#{CPU.modprobe_path} msr"
       sleep 1
     end

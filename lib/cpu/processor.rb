@@ -52,7 +52,7 @@ module CPU
 
     def inspect
       result = "#<#{self.class}: #@processor_id"
-      result << " #@core_id" if @core_id
+      result << " (core#@core_id)" if @core_id
       result << '>'
     end
   end

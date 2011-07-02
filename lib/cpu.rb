@@ -1,6 +1,7 @@
 require 'spruz/uniq_by'
 require 'cpu/processor'
 require 'cpu/msr'
+require 'cpu/load'
 
 # This module provides (read) access to the Model Specific Registers of Intel
 # CPUs on Linux.
@@ -77,5 +78,9 @@ module CPU
     alias each each_processor
 
     include Enumerable
+
+    def load
+      Load.new
+    end
   end
 end
