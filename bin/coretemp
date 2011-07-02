@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'msr'
+require 'cpu'
 require 'spruz/go'
 include Spruz::GO
 require 'bullshit'
@@ -15,7 +15,7 @@ class ParseCommands
   end
 
   def set_t_j_max(temp)
-    t_j_max = temp and MSR::CPU.t_j_max = t_j_max.to_i
+    t_j_max = temp and CPU.t_j_max = t_j_max.to_i
   end
 
   def create_history_path(filename)
@@ -25,9 +25,7 @@ class ParseCommands
 
   def measure_temps(opts)
     set_t_j_max opts['t']
-    MSR.inject({}) do |h, c|
-      h.update c.coreid => c.temperature
-    end.sort_by { |ct| ct.first }.transpose.last
+    CPU.each_core.map(&:temperature)
   end
 
   def simple

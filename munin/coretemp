@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-require 'msr'
+require 'cpu'
 
 if t_j_max = ENV['t_j_max']
-  MSR::CPU.t_j_max = t_j_max.to_i
+  CPU.t_j_max = t_j_max.to_i
 end
 
 case ARGV.shift
@@ -14,11 +14,11 @@ graph_args --base 1000 -l 0
 graph_vtitle Celsius
 graph_category sensors
 EOT
-  for c in MSR
-    puts "cpu#{c.cpuid}.label Core #{c.cpuid}"
+  for c in CPU.cores
+    puts "core#{c.core_id}.label Core #{c.core_id}"
   end
 else
-  for c in MSR
-    puts "cpu#{c.cpuid}.value #{c.temperature}"
+  for c in CPU.cores
+    puts "core#{c.core_id}.value #{c.temperature}"
   end
 end
