@@ -84,6 +84,4 @@ class ParseCommands
   end
 end
 
-if $0 == __FILE__
-  ParseCommands.parse(ARGV)
-end
+ParseCommands.parse(ARGV)
