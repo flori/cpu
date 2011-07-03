@@ -5,6 +5,7 @@ require 'cpu/msr'
 require 'cpu/load'
 require 'cpu/usage_sampler'
 require 'cpu/usage'
+require 'cpu/version'
 
 # This module provides (read) access to the Model Specific Registers of Intel
 # CPUs on Linux.
