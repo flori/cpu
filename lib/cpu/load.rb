@@ -1,8 +1,11 @@
 module CPU
   class Load
+    include Shared
+
     def initialize
-      line = File.open('/proc/loadavg') { |file| file.readline }
-      @load_data = line.split(/\s+/).first(3).map(&:to_f)
+      @load_data = File.open('/proc/loadavg') do |loadavg|
+        loadavg.readline.split(/\s+/).first(3).map(&:to_f)
+      end
     end
 
     def last_minute
@@ -10,11 +13,11 @@ module CPU
     end
 
     def last_minute_by_core
-      last_minute / CPU.num_cores
+      last_minute / num_cores
     end
 
     def last_minute_by_processor
-      last_minute / CPU.num_processors
+      last_minute / num_processors
     end
 
     def last_5_minutes
@@ -22,11 +25,11 @@ module CPU
     end
 
     def last_5_minutes_by_core
-      last_5_minutes / CPU.num_cores
+      last_5_minutes / num_cores
     end
 
     def last_5_minutes_by_processor
-      last_5_minutes / CPU.num_processors
+      last_5_minutes / num_processors
     end
 
     def last_15_minutes
@@ -34,11 +37,11 @@ module CPU
     end
 
     def last_15_minutes_by_core
-      last_15_minutes / CPU.num_cores
+      last_15_minutes / num_cores
     end
 
     def last_15_minutes_by_processor
-      last_15_minutes / CPU.num_processors
+      last_15_minutes / num_processors
     end
 
     def to_a

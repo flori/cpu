@@ -1,5 +1,7 @@
 module CPU
   class Processor
+    include Shared
+
     # Returns a Processor instance for Processor +processor_id+. If this
     # Processor doesn't exist an InvalidProcessorIdError exception is thrown.
     def initialize(processor_id, core_id = nil)
@@ -13,19 +15,20 @@ module CPU
     # Returns the core_id of this Processor.
     attr_reader :core_id
 
-    # Returns the number of processors in this computer
-    def num_processors
-      CPU.num_processors
-    end
-
-    # Returns the number of cores in this computer
-    def num_cores
-      CPU.num_cores
-    end
-
     # Returns an msr object and caches it.
     def msr
       @msr ||= MSR.new(processor_id)
+    end
+
+    attr_writer :usage
+
+    def usage(interval = 1)
+      unless @usage
+        if processor = CPU.usage(interval).find { |p| p.processor_id == processor_id }
+          @usage = processor.usage
+        end
+      end
+      @usage
     end
 
     # Returns the distance between the core temperature of this Processor and
@@ -46,14 +49,24 @@ module CPU
     # to the correct value for your Processor. On i7 architectures (and newer?)
     # it should work without any further configuration.
     def temperature
-      my_t_j_max = t_j_max.nonzero? || CPU.t_j_max
-      my_t_j_max - t_j_max_distance
+      if @temperature
+        @temperature
+      else
+        my_t_j_max = t_j_max.nonzero? || CPU.t_j_max
+        my_t_j_max - t_j_max_distance
+      end
     end
 
+    attr_writer :temperature
+
     def inspect
-      result = "#<#{self.class}: #@processor_id"
-      result << " (core#@core_id)" if @core_id
-      result << '>'
+      if processor_id >= 0
+        result = "#<#{self.class}: #@processor_id"
+        result << " (core#@core_id)" if @core_id
+        result << '>'
+      else
+        "#<#{self.class}: total>"
+      end
     end
   end
 end

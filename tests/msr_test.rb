@@ -22,5 +22,11 @@ module CPU
       assert_operator @cpu0.temperature, '>', 0
       assert_operator @cpu1.temperature, '>', 0
     end
+
+    def test_wrong_processor_id
+      assert_raise(InvalidProcessorIdError) do
+        CPU::MSR.new(CPU.num_processors)
+      end
+    end
   end
 end
