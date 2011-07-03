@@ -12,6 +12,8 @@ module CPU
       sleep 1
     end
 
+    # Create a new wrapper for the msr kernel file associated with
+    # +processor_id+.
     def initialize(processor_id)
       self.class.available? or self.class.load_module
       begin

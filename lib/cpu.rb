@@ -19,13 +19,13 @@ module CPU
   end
   self.t_j_max = 95
 
-  # XXX
+  # The base exception class for all CPU related exceptions.
   class CPUError < StandardError; end
 
   # This exception is thrown if an invalid ProcessorId is queried.
   class InvalidProcessorIdError < CPUError; end
 
-  # XXX
+  # This excpetion is raised if sample data couldn't be read.
   class NoSampleDataError < CPUError; end
 
   class << self
@@ -59,11 +59,13 @@ module CPU
       end
     end
 
+    # Return the number of processors in this computer.
     def num_processors
       @num_processors or processors
       @num_processors
     end
 
+    # Return the number of cores in the processor(s) of this computer.
     def num_cores
       @num_cores or processors
       @num_cores
@@ -71,10 +73,12 @@ module CPU
 
     alias to_a processors
 
+    # Iterate over every Processor instance identified by a distinct core.
     def each_core(&block)
       processors.uniq_by(&:core_id).each(&block)
     end
 
+    # Return all Processor instances identified by a distinct core.
     def cores
       each_core.to_a
     end
@@ -93,6 +97,9 @@ module CPU
       Load.new
     end
 
+    # Return an array of all Processor instances for this machine, but also
+    # measure CPU usage during the next +interval+ seconds or during the
+    # runtime of the given block.
     def usage(interval = 1)
       before_usage = UsageSampler.new
       if block_given?
@@ -107,8 +114,11 @@ module CPU
       end
     end
 
-    def sum_usage_processor(interval = 1)
-      processors = usage(interval)
+    # Return a single Processor instance, measure CPU usage during the next
+    # +interval+ seconds or during the runtime of the given block, and then
+    # sum up the CPU usage in this instance.
+    def sum_usage_processor(interval = 1, &block)
+      processors = usage(interval, &block)
       processor = Processor.new -1, -1
       processor.num_processors = processor.num_cores = 1
       processor.temperature = processors.map(&:temperature).max

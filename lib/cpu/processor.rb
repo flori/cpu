@@ -22,9 +22,16 @@ module CPU
 
     attr_writer :usage
 
-    def usage(interval = 1)
+    # Measure CPU usage for this Processor instance during the next +interval+
+    # or during the runtime of the given block. Іf CPU usage on all processors
+    # of the system should be measured, it's better (=faster) to use the
+    # CPU.usage method instead.
+    def usage(interval = 1, &block)
       unless @usage
-        if processor = CPU.usage(interval).find { |p| p.processor_id == processor_id }
+        if processor = CPU.usage(interval, &block).find {
+          |p| p.processor_id == processor_id
+        }
+        then
           @usage = processor.usage
         end
       end

@@ -9,6 +9,8 @@ module CPU
       end
     end
 
+    # Set the number of processors (this causes them to becomed fixed in the
+    # object the CPU::Shared module was mixed into).
     attr_writer :num_processors
 
     # Returns the number of cores in this computer
@@ -20,6 +22,8 @@ module CPU
       end
     end
 
+    # Set the number of cores (this causes them to becomed fixed in the object
+    # the CPU::Shared module was mixed into).
     attr_writer :num_cores
   end
 end

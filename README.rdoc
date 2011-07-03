@@ -1,0 +1,35 @@
+= CPU information in Ruby/Linux
+
+== Description
+
+Library to gather CPU information (load averages, usage, temperature) in Ruby
+on Linux
+
+
+== Installation
+
+To install cpu via its gem type:
+
+# gem install cpu
+
+To install from the source repository, just type into the command line as root:
+
+# rake install
+
+== Documentation
+
+To create the documentation of this module, type
+
+$ rake doc
+
+and the API documentation is generated.
+
+== Author
+
+Florian Frank mailto:flori@ping.de
+
+== License
+
+This is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License Version 2 as published by
+the Free Software Foundation: http://www.gnu.org/copyleft/gpl.html
