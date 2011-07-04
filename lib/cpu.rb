@@ -122,7 +122,11 @@ module CPU
       processors = usage(interval, &block)
       processor = Processor.new -1, -1
       processor.num_processors = processor.num_cores = 1
-      processor.temperature = processors.map(&:temperature).max
+      begin
+        processor.temperature = processors.map(&:temperature).max
+      rescue NoSampleDataError
+        processor.temperature = nil
+      end
       processor.usage = processors.map(&:usage).inject { |s, u| s + u }
       processor.usage.num_processors = processor.usage.num_cores = 1
       processor.freeze
