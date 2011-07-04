@@ -17,9 +17,12 @@ module CPU
     def initialize(processor_id)
       self.class.available? or self.class.load_module
       begin
-        @io = IO.new IO.sysopen('/dev/cpu/%d/msr' % processor_id, 'rb')
+        name = '/dev/cpu/%d/msr' % processor_id
+        @io = IO.new IO.sysopen(name, 'rb')
       rescue Errno::ENOENT
         raise InvalidProcessorIdError, "'#{processor_id}' is not a valid processor_id on this machine"
+      rescue StandardError => e
+        raise NoSampleDataError, "could not read temperature from #{name}: #{e}"
       end
     end
 
