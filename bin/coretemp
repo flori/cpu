@@ -3,7 +3,7 @@
 require 'cpu'
 require 'spruz/go'
 include Spruz::GO
-require 'bullshit'
+require 'more_math'
 
 class ParseCommands
   def self.parse(argv)
@@ -65,7 +65,7 @@ class ParseCommands
       }
       measurements_last = history.last[1..-1]
       times, *measurements = history.transpose
-      analyses = measurements.map { |m| Bullshit::Analysis.new(m) }
+      analyses = measurements.map { |m| MoreMath::Sequence.new(m) }
       puts " min: %s" % (analyses.map { |a| a.min  } * ' ')
       puts "last: %s" % (measurements_last * ' ')
       puts " max: %s" % (analyses.map { |a| a.max  } * ' ')
