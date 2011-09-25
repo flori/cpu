@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 require 'cpu'
-require 'spruz/go'
-include Spruz::GO
+require 'tins/go'
+include Tins::GO
 require 'more_math'
 
 class ParseCommands

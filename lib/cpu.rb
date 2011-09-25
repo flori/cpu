@@ -1,4 +1,4 @@
-require 'spruz/uniq_by'
+require 'tins/uniq_by'
 require 'cpu/shared'
 require 'cpu/processor'
 require 'cpu/msr'
@@ -51,7 +51,7 @@ module CPU
         processor_id =~ /\A\d+\Z/ or next ps
         ps << processor_id.to_i
       end
-      processors.extend Spruz::UniqBy
+      processors.extend Tins::UniqBy
       processors.sort!
       @num_processors = processors.size
       @num_cores      = cpu_cores.invert.size
