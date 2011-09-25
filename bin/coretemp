@@ -23,26 +23,29 @@ class ParseCommands
     File.expand_path(filename)
   end
 
-  def measure_temps(opts)
+  def measure_data(opts)
     set_t_j_max opts['t']
-    CPU.each_core.map(&:temperature)
+    CPU.usage(@duration || 1)
   end
 
   def simple
     opts = go 't', @argv
-    puts measure_temps(opts) * ' '
+    puts measure_data(opts).map(&:temperature) * ' '
   end
 
   def collect
-    opts = go 'tf', @argv
+    opts = go 'tfn:', @argv
+    @duration = (opts['n'] || 1).to_f
     filename = create_history_path opts['f']
-    temperatures = measure_temps(opts)
-    line = ([ Time.now.to_f ] + temperatures) * ' '
-    if filename
-      open(filename, 'a') do |o|
-        o.puts line
+    begin
+      temperatures = measure_data(opts).map(&:temperature)
+      line = ([ Time.now.to_f ] + temperatures) * ' '
+      if filename
+        open(filename, 'a') do |o|
+          o.puts line
+        end
       end
-    end
+    end while @duration > 0
   end
 
   def clear
@@ -65,11 +68,11 @@ class ParseCommands
       }
       measurements_last = history.last[1..-1]
       times, *measurements = history.transpose
-      analyses = measurements.map { |m| MoreMath::Sequence.new(m) }
-      puts " min: %s" % (analyses.map { |a| a.min  } * ' ')
+      sequences = measurements.map { |m| MoreMath::Sequence.new(m) }
+      puts " min: %s" % (sequences.map { |a| a.min  } * ' ')
       puts "last: %s" % (measurements_last * ' ')
-      puts " max: %s" % (analyses.map { |a| a.max  } * ' ')
-      puts "mean: %s" % (analyses.map { |a| a.mean.round } * ' ')
+      puts " max: %s" % (sequences.map { |a| a.max  } * ' ')
+      puts "mean: %s" % (sequences.map { |a| a.mean.round } * ' ')
     end
   end
 
@@ -78,7 +81,6 @@ class ParseCommands
     when 'collect'       then collect
     when 'clear'         then clear
     when 'stats'         then stats
-    when 'collect_stats' then collect; stats
     else                      simple
     end
   end

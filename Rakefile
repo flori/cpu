@@ -17,7 +17,7 @@ GemHadar do
   readme      'README.rdoc'
   executables 'coretemp'
 
-  dependency  'spruz',          '~>0.2.2'
+  dependency  'tins',           '~>0.3'
   dependency  'more_math',      '~>0.0'
 
   install_library do
