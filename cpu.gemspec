@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.executables = ["coretemp"]
   s.extra_rdoc_files = ["README.rdoc", "lib/cpu.rb", "lib/cpu/version.rb", "lib/cpu/usage.rb", "lib/cpu/processor.rb", "lib/cpu/load.rb", "lib/cpu/msr.rb", "lib/cpu/usage_sampler.rb", "lib/cpu/shared.rb"]
   s.files = [".gitignore", "CHANGES", "COPYING", "Gemfile", "README.rdoc", "Rakefile", "VERSION", "bin/coretemp", "cpu.gemspec", "lib/cpu.rb", "lib/cpu/load.rb", "lib/cpu/msr.rb", "lib/cpu/processor.rb", "lib/cpu/shared.rb", "lib/cpu/usage.rb", "lib/cpu/usage_sampler.rb", "lib/cpu/version.rb", "munin/coretemp", "tests/load_test.rb", "tests/msr_test.rb", "tests/usage_test.rb"]
-  s.homepage = "http://flori.github.com/cpu"
+  s.homepage = "https://github.com/flori/cpu"
   s.rdoc_options = ["--title", "Cpu - CPU information in Ruby/Linux", "--main", "README.rdoc"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.10"
