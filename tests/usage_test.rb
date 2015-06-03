@@ -1,5 +1,4 @@
 require 'test/unit'
-require 'mocha'
 require 'cpu'
 
 module CPU

@@ -17,7 +17,7 @@ GemHadar do
   readme      'README.rdoc'
   executables 'coretemp'
 
-  dependency  'tins',           '~>0.3'
+  dependency  'tins',           '~>1.0'
   dependency  'more_math',      '~>0.0'
 
   install_library do
