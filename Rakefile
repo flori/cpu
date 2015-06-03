@@ -7,7 +7,7 @@ GemHadar do
   path_module 'CPU'
   author      'Florian Frank'
   email       'flori@ping.de'
-  homepage    "http://flori.github.com/#{name}"
+  homepage    "https://github.com/flori/#{name}"
   summary     'CPU information in Ruby/Linux'
   description 'Library to gather CPU information (load averages, usage,'\
               ' temperature) in Ruby on Linux'
