@@ -1,23 +1,25 @@
-require 'test/unit'
+require 'test_helper'
 require 'cpu'
 
 module CPU
-  class LoadTest < Test::Unit::TestCase
+  class LoadTest < Minitest::Test
     def test_load_minutes
-      @load = CPU.load
-      @load.stubs(:num_processors).returns(4)
-      @load.stubs(:num_cores).returns(2)
-      for v in %w[last_minute last_5_minutes last_15_minutes]
-        assert_kind_of Float, @load.__send__(v)
-        assert_operator @load.__send__(v), :>=, 0
-        assert_in_delta\
-          4 * @load.__send__("#{v}_by_processor"),
-          @load.__send__(v),
-          1E-3
-        assert_in_delta\
-          2 * @load.__send__("#{v}_by_core"),
-          @load.__send__(v),
-          1E-3
+      CPU.stub :num_processors, 4 do
+        CPU.stub :num_cores, 2 do
+          @load = CPU.load
+          for v in %w[last_minute last_5_minutes last_15_minutes]
+            assert_kind_of Float, @load.__send__(v)
+            assert_operator @load.__send__(v), :>=, 0
+            assert_in_delta\
+              4 * @load.__send__("#{v}_by_processor"),
+              @load.__send__(v),
+              1E-3
+            assert_in_delta\
+              2 * @load.__send__("#{v}_by_core"),
+              @load.__send__(v),
+              1E-3
+          end
+        end
       end
     end
 

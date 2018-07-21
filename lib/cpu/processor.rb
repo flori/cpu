@@ -56,7 +56,7 @@ module CPU
     # to the correct value for your Processor. On i7 architectures (and newer?)
     # it should work without any further configuration.
     def temperature
-      if @temperature
+      if defined?(@temperature)
         @temperature
       else
         my_t_j_max = t_j_max.nonzero? || CPU.t_j_max

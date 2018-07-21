@@ -2,7 +2,7 @@ module CPU
   module Shared
     # Returns the number of processors in this computer
     def num_processors
-      if @num_processors
+      if defined?(@num_processors)
         @num_processors
       else
         CPU.num_processors
@@ -15,7 +15,7 @@ module CPU
 
     # Returns the number of cores in this computer
     def num_cores
-      if @num_cores
+      if defined?(@num_cores)
         @num_cores
       else
         CPU.num_cores

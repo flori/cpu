@@ -120,7 +120,7 @@ module CPU
     # sum up the CPU usage in this instance.
     def sum_usage_processor(interval = 1, &block)
       processors = usage(interval, &block)
-      processor = Processor.new -1, -1
+      processor = Processor.new(-1, -1)
       processor.num_processors = processor.num_cores = 1
       begin
         processor.temperature = processors.map(&:temperature).max
@@ -134,3 +134,4 @@ module CPU
     end
   end
 end
+CPU::MSR.load_module

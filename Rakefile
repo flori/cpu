@@ -17,6 +17,7 @@ GemHadar do
   readme      'README.rdoc'
   executables 'coretemp'
 
+  development_dependency        'rake'
   dependency  'tins',           '~>1.0'
   dependency  'more_math',      '~>0.0'
 

@@ -1,8 +1,8 @@
-require 'test/unit'
+require 'test_helper'
 require 'cpu'
 
 module CPU
-  class MSRTest < Test::Unit::TestCase
+  class MSRTest < Minitest::Test
     def setup
       @cpu0, @cpu1 = CPU.to_a
     end
@@ -24,7 +24,7 @@ module CPU
     end
 
     def test_wrong_processor_id
-      assert_raise(InvalidProcessorIdError) do
+      assert_raises(InvalidProcessorIdError) do
         CPU::MSR.new(CPU.num_processors)
       end
     end

@@ -1,6 +1,6 @@
 module CPU
   # CPU version
-  VERSION         = '0.0.5'
+  VERSION         = '0.0.6'
   VERSION_ARRAY   = VERSION.split('.').map(&:to_i) # :nodoc:
   VERSION_MAJOR   = VERSION_ARRAY[0] # :nodoc:
   VERSION_MINOR   = VERSION_ARRAY[1] # :nodoc:

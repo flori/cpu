@@ -1,8 +1,8 @@
-require 'test/unit'
+require 'test_helper'
 require 'cpu'
 
 module CPU
-  class UsageTest < Test::Unit::TestCase
+  class UsageTest < Minitest::Test
     def test_sum_usage
       @processor = CPU.sum_usage_processor 1
       assert_kind_of Processor, @processor
