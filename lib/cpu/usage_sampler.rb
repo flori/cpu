@@ -24,7 +24,7 @@ module CPU
     # Take one sample of CPU usage data for every processor in this computer
     # and store them in the +usages+ attribute.
     def sample
-      total, @usages = nil, {}
+      @usages = {}
       timestamp = Time.now
       File.foreach('/proc/stat') do |line|
         case line
